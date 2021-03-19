@@ -17,6 +17,9 @@ static const routeName = '/product-detail';
       appBar: AppBar(
     title: Text(loadedProduct.title),
       ),
+      body: Center(
+
+      ),
     );
   }
 }
