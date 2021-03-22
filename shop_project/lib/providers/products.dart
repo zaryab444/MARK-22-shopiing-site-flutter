@@ -36,6 +36,15 @@ class Products  with ChangeNotifier  {
       imageUrl:
       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
+    Product(
+      id: 'p5',
+      title: 'watches',
+      description: 'Best rolex watch',
+      price: 12.99,
+      imageUrl:
+      'https://images-na.ssl-images-amazon.com/images/I/71ww5fmHMpL._AC_UX522_.jpg'
+    ),
+
 
   ];
 
