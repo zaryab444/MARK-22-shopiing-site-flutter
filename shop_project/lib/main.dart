@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'MyShop',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
+          primarySwatch: Colors.red,
           accentColor: Colors.deepOrange,
 
 

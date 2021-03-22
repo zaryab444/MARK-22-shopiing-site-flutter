@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_project/providers/products.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 
 
@@ -45,6 +46,22 @@ static const routeName = '/product-detail';
                  textAlign: TextAlign.center,
                  softWrap: true,),
              ),
+            SizedBox(height: 50,),
+        RatingBar.builder(
+        initialRating: 3,
+        minRating: 1,
+        direction: Axis.horizontal,
+        allowHalfRating: true,
+        itemCount: 5,
+        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+        itemBuilder: (context, _) => Icon(
+          Icons.star,
+          color: Colors.amber,
+        ),
+        onRatingUpdate: (rating) {
+          print(rating);
+        },
+      ),
 
           ],
         ),
