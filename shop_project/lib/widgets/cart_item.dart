@@ -6,7 +6,7 @@ import '../providers/cart.dart';
 
 class CartItem extends StatelessWidget {
   final String id;
-   final String productId;
+  final String productId;
   final double price;
   final int quantity;
   final String title;
@@ -34,13 +34,13 @@ class CartItem extends StatelessWidget {
         padding: EdgeInsets.only(right: 20),
       ) ,
       direction:  DismissDirection.endToStart,//right and left delete icon in dismissible
-     onDismissed: (direction){
-         Provider.of<Cart>(context, listen: false).removeItem(productId);
-     },
+      onDismissed: (direction){
+        Provider.of<Cart>(context, listen: false).removeItem(productId);
+      },
 
       child: Card(
         margin: EdgeInsets.symmetric(horizontal: 15,
-        vertical: 4),
+            vertical: 4),
         child: Padding(
           padding: EdgeInsets.all(8),
           child: ListTile(
@@ -50,10 +50,37 @@ class CartItem extends StatelessWidget {
                 child: FittedBox(
                   child: Text('\$$price'),),
               ),
-      ),
+            ),
             title: Text(title),
             subtitle: Text('Total: \$${(price * quantity)}'),
-            trailing: Text('$quantity x'),
+            trailing: Container(
+              child: Row(
+                mainAxisSize:  MainAxisSize.min,
+                children: <Widget>[
+                  IconButton(
+                    onPressed: (quantity > 1)
+                        ? () => {
+                      Provider.of<Cart>(context, listen: false)
+                          .addOrRemoveQuantity(productId, false)
+                    }
+                        : () => {
+                      Provider.of<Cart>(context, listen: false)
+                          .removeItem(productId)
+                    },
+                    icon: Icon(Icons.remove, color: Colors.black),
+                  ),
+                  Text('$quantity'),
+                  IconButton(
+                    icon: Icon(Icons.add, color: Colors.black),
+                    onPressed: () {
+                      Provider.of<Cart>(context, listen: false)
+                          .addOrRemoveQuantity(productId, true);
+                    },
+                  ),
+
+                ],
+              ),
+            )
 
           ),
         ),

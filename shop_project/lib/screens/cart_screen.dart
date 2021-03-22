@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shop_project/providers/cart.dart';
 import '../providers/cart.dart';
 import 'package:provider/provider.dart';
 import '../widgets/cart_item.dart' as ci ; //ci is use because CartItem is name mostly in dart file
+
 
 
 class CartScreen extends StatelessWidget {
@@ -29,7 +31,7 @@ class CartScreen extends StatelessWidget {
                     color: Theme.of(context).primaryTextTheme.title.color
                   ),
                   ),
-                  backgroundColor: Theme.of(context).primaryColor,),
+                  backgroundColor: Theme.of(context).primaryColor),
                   FlatButton(
                       child: Text('Order Now'),
                     onPressed: (){},
@@ -42,13 +44,15 @@ class CartScreen extends StatelessWidget {
        SizedBox(height: 10),
           Expanded(
               child: ListView.builder(
-                itemCount: cart.items.length,
+                 itemCount: cart.items.length,
                 itemBuilder: (ctx,i) =>  ci.CartItem(
                   cart.items.values.toList()[i].id,
                   cart.items.keys.toList()[i],
-                    cart.items.values.toList()[i]. price,
+                 cart.items.values.toList()[i]. price,
                     cart.items.values.toList()[i]. quantity,
-                    cart.items.values.toList()[i].   title),
+                    cart.items.values.toList()[i].   title,
+
+                ),
 
                   ),
           ),
