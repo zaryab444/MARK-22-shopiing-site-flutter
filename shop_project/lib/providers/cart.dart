@@ -81,6 +81,25 @@ notifyListeners();
     notifyListeners();
   }
 
+  //this condition is used when we pressed undo
+void removeSingleItem(String productId){
+    if (!_items.containsKey(productId)){
+   return;
+    }
+    if (_items[productId].quantity>1){
+      _items.update(productId, (existingCartItem) => CartItem(
+          id:existingCartItem.id ,
+          title:existingCartItem.title ,
+          price: existingCartItem.price,
+          quantity: existingCartItem.quantity - 1,
+      ),);
+    }
+    else {
+      _items.remove(productId);
+    }
+    notifyListeners();
+}
+
   void clear(){
     //this condition when cart go to order section its clear cart
     _items = {};
