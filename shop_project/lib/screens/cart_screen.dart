@@ -3,6 +3,7 @@ import 'package:shop_project/providers/cart.dart';
 import '../providers/cart.dart';
 import 'package:provider/provider.dart';
 import '../widgets/cart_item.dart' as ci ; //ci is use because CartItem is name mostly in dart file
+import '../providers/orders.dart';
 
 
 
@@ -27,14 +28,20 @@ class CartScreen extends StatelessWidget {
                   Text('Total', style: TextStyle(fontSize: 20),),
                 //  SizedBox(width: 10.0),
                   Spacer(),
-                  Chip(label: Text('\$${cart.totalAmount}' ,style: TextStyle(
+                  Chip(label: Text('\$${cart.totalAmount.toStringAsFixed(2)}' ,style: TextStyle(
                     color: Theme.of(context).primaryTextTheme.title.color
                   ),
                   ),
                   backgroundColor: Theme.of(context).primaryColor),
                   FlatButton(
                       child: Text('Order Now'),
-                    onPressed: (){},
+                    onPressed: (){
+                        Provider.of<Orders>(context, listen: false).addOrder(
+                          cart.items.values.toList(),
+                          cart.totalAmount,
+                        );
+                        cart.clear();
+                    },
                     textColor: Theme.of(context).primaryColor,
                   )
                 ],

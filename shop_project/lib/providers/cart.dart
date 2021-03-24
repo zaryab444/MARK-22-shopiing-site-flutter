@@ -81,5 +81,10 @@ notifyListeners();
     notifyListeners();
   }
 
+  void clear(){
+    //this condition when cart go to order section its clear cart
+    _items = {};
+    notifyListeners();
+  }
 
 }
