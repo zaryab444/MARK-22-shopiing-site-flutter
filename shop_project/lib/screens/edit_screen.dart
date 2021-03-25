@@ -72,15 +72,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_priceFocusNode);
                 },
-                onSaved:(value){
-                  _editedProduct = Product(
-                    title: value,
-                    price: _editedProduct.price,
-                    description: _editedProduct.description,
-                    imageUrl: _editedProduct.imageUrl,
-                    id: null,
-                  );
-                } ,
+                onSaved: (value) {
+                  _editedProduct = _editedProduct.copyWith(title: value);
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Price'),
@@ -90,15 +84,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 onFieldSubmitted: (_) {
                   FocusScope.of(context).requestFocus(_descriptionFocusNode);
                 },
-                onSaved:(value){
-                  _editedProduct = Product(
-                    title: _editedProduct.title,
-                    price: double.parse(value), //we parse value because value is string and price in double
-                    description: _editedProduct.description,
-                    imageUrl: _editedProduct.imageUrl,
-                    id: null,
-                  );
-                } ,
+                onSaved: (value) {
+                  _editedProduct = _editedProduct.copyWith(price: double.parse(value));
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(labelText: 'Description'),
@@ -106,15 +94,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 keyboardType: TextInputType.multiline,
                 focusNode: _descriptionFocusNode,
 
-                onSaved:(value){
-                  _editedProduct = Product(
-                    title: _editedProduct.title,
-                    price: _editedProduct.price,
-                    description: value,
-                    imageUrl: _editedProduct.imageUrl,
-                    id: null,
-                  );
-                } ,
+                onSaved: (value) {
+                  _editedProduct = _editedProduct.copyWith(description: value);
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -150,15 +132,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       onFieldSubmitted: (_) =>{
                         _saveForm(),
                       },
-                      onSaved:(value){
-                        _editedProduct = Product(
-                          title: _editedProduct.title,
-                          price: _editedProduct.price,
-                          description: _editedProduct.description,
-                          imageUrl: value,
-                          id: null,
-                        );
-                      } ,
+                      onSaved: (value) {
+                        _editedProduct = _editedProduct.copyWith(imageUrl: value);
+                      },
                     ),
                   ),
                 ],
