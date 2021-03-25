@@ -34,5 +34,8 @@ void addOrder (List<CartItem> cartProducts, double total){
           );
           notifyListeners();
 }
-
+        void removeItem(String id){
+          _orders.remove(id);
+          notifyListeners();
+        }
 }
