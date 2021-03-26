@@ -38,4 +38,10 @@ void addOrder (List<CartItem> cartProducts, double total){
           _orders.remove(id);
           notifyListeners();
         }
+        void deleteProduct(String id){
+
+          _orders.removeWhere((prod) => prod.id == id);
+          notifyListeners();
+        }
+
 }

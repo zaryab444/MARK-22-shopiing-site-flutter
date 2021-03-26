@@ -85,6 +85,14 @@ class _OrderItemState extends State<OrderItem> {
                   },
                 ),
               ),
+          leading:    IconButton(
+                icon: Icon(Icons.delete),
+                onPressed: (){
+                  Provider.of <Orders>(context,listen: false).deleteProduct(widget.order.id);
+                },
+                color: Theme.of(context).errorColor,
+
+              ),
             ),
             if (_expanded) Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
