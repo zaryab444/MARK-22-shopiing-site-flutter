@@ -1,5 +1,8 @@
- import 'package:flutter/cupertino.dart';
- import 'product.dart';
+ import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'product.dart';
+
 
 
 class Products  with ChangeNotifier  {
@@ -64,17 +67,38 @@ class Products  with ChangeNotifier  {
 
 
 
-  void addProduct(Product product){
-   final newProduct = Product(
+  Future <void> addProduct(Product product){
+    // var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json');
+    var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json');
 
-       title: product.title,
-      description: product.description,
-        price: product.price,
-       imageUrl: product.imageUrl,
-       id: DateTime.now().toString(),
-   );
-   _items.add(newProduct);
-    notifyListeners();
+    return http.post(url, body:json.encode({
+        'title': product.title,
+        'description': product.description,
+        'imageUrl' : product.imageUrl,
+        'price' : product.price,
+        'isFavorite': product.isFavorite,
+      }),
+      )
+         .then((response) {
+       print(response);
+       final newProduct = Product(
+
+         title: product.title,
+         description: product.description,
+         price: product.price,
+         imageUrl: product.imageUrl,
+         // id: DateTime.now().toString(),
+         id: json.decode(response.body)['name'],
+       );
+       _items.add(newProduct);
+       notifyListeners();
+
+      }).catchError((error){
+        print(error);
+        throw error;
+     });
+
+
   }
 
   void updateProduct(String id, Product newProduct){

@@ -31,6 +31,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   };
 
   var _isinit = true;
+  var _isLoading = false;
 
   @override
 
@@ -79,15 +80,48 @@ class _EditProductScreenState extends State<EditProductScreen> {
      return;
    }
       _form.currentState.save();
+   setState(() {
+     _isLoading = true;
+
+   });
      if (_editedProduct.id  != null){
 
        Provider.of<Products>(context, listen: false).updateProduct(_editedProduct.id , _editedProduct);
+     setState(() {
+       _isLoading= false;
+     });
+       Navigator.of(context).pop();
+
 
      } else {
-       Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
+       Provider.of<Products>(context, listen: false).addProduct(_editedProduct)
+       .catchError((error){
+       return showDialog<Null>(
+           context: context,
+           builder: (ctx) => AlertDialog(
+             title: Text( 'An error occured'),
+             content: Text('Something went wrong'),
+             actions: <Widget>[
+               FlatButton(
+                   onPressed: (){
+                     Navigator.of(context).pop();
+                   },
+                   child: Text('Okay'))
+             ],
+
+           )
+         );
+       })
+           .then((_) {
+             setState(() {
+               _isLoading = false;
+             });
+         Navigator.of(context).pop(); //we use then because we use loader in app for post a product
+
+       });
      }
 
-       Navigator.of(context).pop();
+       // Navigator.of(context).pop();
   }
 
   void _updateImageUrl(){
@@ -104,7 +138,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Product'),
+        title: Text('Add Product'),
         actions: <Widget> [
           IconButton(icon: Icon(Icons.save),
 
@@ -112,7 +146,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body:_isLoading ? Center(child: CircularProgressIndicator(),
+      )
+
+          :Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _form,
