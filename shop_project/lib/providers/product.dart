@@ -8,6 +8,8 @@ class Product  with ChangeNotifier {
   final String imageUrl;
   bool isFavorite;
 
+
+  //constructor
   Product(
       {
         @required this.id,
@@ -18,10 +20,15 @@ class Product  with ChangeNotifier {
       this.isFavorite = false
       });
 
+
+  //choose favourite products method
   void toggleFavoriteStatus(){
     isFavorite = !isFavorite;
     notifyListeners();
   }
+
+
+  //this method use in to overcome repetetive code in validators
   Product copyWith({
     String id,
     String title,

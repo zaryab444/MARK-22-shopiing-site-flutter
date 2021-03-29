@@ -1,5 +1,7 @@
  import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'product.dart';
 
@@ -78,32 +80,6 @@ class Products  with ChangeNotifier  {
     }
   }
 
-//  Future<void> fetchAndSetProducts() async {
-//    var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json');
-//  try{
-//    final response = await http.get(url);
-//    // print(json.decode(response.body));
-//    final extractedData = json.decode(response.body) as Map<String, dynamic>;
-//    final List<Product> loadedProducts = [];
-//    extractedData.forEach((prodId, prodData) {
-//         loadedProducts.add(Product(
-//           id:prodId,
-//           title: prodData['title'],
-//           description: prodData['description'],
-//           price: prodData ['price'],
-//           isFavorite: prodData['isFavorite'],
-//           imageUrl: prodData['imageUrl'],
-//         ));
-//    });
-//
-// _items = loadedProducts;
-//   notifyListeners(); //for update all places in my app
-//  } catch (error){
-//    throw (error);
-//  }
-//
-//  }
-
 
   Future <void> addProduct(Product product) async{
     // var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json');
@@ -141,9 +117,18 @@ class Products  with ChangeNotifier  {
 
   }
 
-  void updateProduct(String id, Product newProduct){
+Future<void>  updateProduct(String id, Product newProduct) async {
+
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >=0) {
+      final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products/$id.json');
+     http.patch(url,body: json.encode({
+       'title': newProduct.title,
+       'description': newProduct.description,
+       'imageUrl': newProduct.imageUrl,
+       'price': newProduct.price
+     }));
+
       _items [prodIndex] = newProduct;
       notifyListeners();
     }
@@ -152,11 +137,21 @@ class Products  with ChangeNotifier  {
     }
     }
 
-    void deleteProduct(String id){
 
-    _items.removeWhere((prod) => prod.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products/$id.json');
+    final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
+    var existingProduct = _items[existingProductIndex];
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+    final response = await http.delete(url);
+    if (response.statusCode >= 400) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw HttpException('Could not delete product.');
     }
+    existingProduct = null;
+  }
 
   }
 
