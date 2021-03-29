@@ -9,6 +9,7 @@ import '../widgets/products_grid.dart';
 import '../widgets/badge.dart';
 import '../providers/cart.dart';
 import '../screens/cart_screen.dart';
+import '../providers/products.dart';
 
 enum FilterOption {
   Favourites,
@@ -23,6 +24,37 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
    var _showOnlyFavorites = false;
+   var _isInit = true;
+   var _isloading = false;
+
+
+   @override
+  void initState() {
+// Provider.of<Products>(context).fetchAndSeetProducts(); wont work
+//    Future.delayed(Duration.zero).then((_){
+//      Provider.of<Products>(context).fetchAndSeetProducts();
+//    }); This method also work you dont need didchange dependencies method but your wish which you want to use
+
+    super.initState();
+  }
+  @override
+  void didChangeDependencies() {
+    if (_isInit){
+      setState(() {
+        _isloading = true;
+      });
+
+     /// Provider.of<Products>(context).fetchAndSetProducts();
+      Provider.of<Products>(context).fetchAndSetProducts().then((_) {
+setState(() {
+  _isloading =false;
+
+});
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +100,10 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
       ),
       drawer: AppDrawer(),
 
-      body:  ProductsGrid(_showOnlyFavorites),
+      body:  //ProductsGrid(_showOnlyFavorites),
+    _isloading ? Center(child: CircularProgressIndicator(),
+    )
+        : ProductsGrid(_showOnlyFavorites),
 
 
 

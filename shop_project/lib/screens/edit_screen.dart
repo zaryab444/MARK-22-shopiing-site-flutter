@@ -74,7 +74,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.dispose();
   }
 
-  void _saveForm(){
+ Future <void> _saveForm() async{
    final isvalid =  _form.currentState.validate();
    if(!isvalid){
      return;
@@ -94,31 +94,38 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
 
      } else {
-       Provider.of<Products>(context, listen: false).addProduct(_editedProduct)
-       .catchError((error){
-       return showDialog<Null>(
-           context: context,
-           builder: (ctx) => AlertDialog(
-             title: Text( 'An error occured'),
-             content: Text('Something went wrong'),
-             actions: <Widget>[
-               FlatButton(
-                   onPressed: (){
-                     Navigator.of(context).pop();
-                   },
-                   child: Text('Okay'))
-             ],
+       try{
+         await  Provider.of<Products>(context, listen: false)
+             .addProduct(_editedProduct);
+       } catch (error){
+      await   showDialog<Null>(
+             context: context,
+             builder: (ctx) => AlertDialog(
+               title: Text( 'An error occured'),
+               content: Text('Something went wrong'),
+               actions: <Widget>[
+                 FlatButton(
+                     onPressed: (){
+                       Navigator.of(context).pop();
+                     },
+                     child: Text('Okay'))
+               ],
 
-           )
+             ),
          );
-       })
-           .then((_) {
-             setState(() {
-               _isLoading = false;
-             });
+       } finally {
+         setState(() {
+           _isLoading = false;
+         });
          Navigator.of(context).pop(); //we use then because we use loader in app for post a product
 
-       });
+       }
+
+
+
+
+
+
      }
 
        // Navigator.of(context).pop();
