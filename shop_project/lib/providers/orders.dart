@@ -1,5 +1,7 @@
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import './cart.dart';
 
 class OrderItem {
@@ -34,6 +36,50 @@ void addOrder (List<CartItem> cartProducts, double total){
           );
           notifyListeners();
 }
+//   Future <void> addOrder(List<CartItem>, OrderItem orderItem) async{
+//     var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/orders.json');
+//     try {
+//       final response = await http.post(url, body: json.encode({
+//     _orders.insert(
+//     0,
+//         OrderItem(
+//         id: orderItem.id,
+//         amount: orderItem.amount,
+//         'dateTime': orderItem.dateTime,
+//         'products': orderItem.products,
+//   ),
+//   );
+//       }),
+//
+//       );
+//       final newOrder = OrderItem(
+//
+//         amount: orderItem.amount,
+//         dateTime: orderItem.dateTime,
+//         products: orderItem.products,
+//
+//         id: json.decode(response.body)['name'],
+//       );
+//       _orders.add(newOrder);
+//       notifyListeners();
+//
+//     } catch (error){
+//       print(error);
+//       throw error;
+//     }
+//
+//
+//
+//
+//
+//   }
+
+
+
+
+
+
+
         void removeItem(String id){
           _orders.remove(id);
           notifyListeners();
