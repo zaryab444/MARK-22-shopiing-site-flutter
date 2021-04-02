@@ -11,6 +11,7 @@ class Product  with ChangeNotifier {
   bool isFavorite;
 
 
+
   //constructor
   Product(
       {
@@ -19,7 +20,8 @@ class Product  with ChangeNotifier {
       @required this.description,
       @required this.price,
       @required this.imageUrl,
-      this.isFavorite = false
+      this.isFavorite = false,
+
       });
 
 

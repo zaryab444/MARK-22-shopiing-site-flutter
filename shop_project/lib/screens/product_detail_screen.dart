@@ -58,6 +58,7 @@ static const routeName = '/product-detail';
           Icons.star,
           color: Colors.amber,
         ),
+
         onRatingUpdate: (rating) {
           print(rating);
         },

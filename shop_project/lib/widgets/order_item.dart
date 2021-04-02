@@ -22,6 +22,7 @@ class _OrderItemState extends State<OrderItem> {
 
   @override
   Widget build(BuildContext context) {
+    final scaffold  = Scaffold.of(context);
     return Dismissible(
       key: ValueKey(widget.order.id),
       background: Container(
@@ -87,8 +88,17 @@ class _OrderItemState extends State<OrderItem> {
               ),
           leading:    IconButton(
                 icon: Icon(Icons.delete),
-                onPressed: (){
-                  Provider.of <Orders>(context,listen: false).deleteProduct(widget.order.id);
+                onPressed: () async{
+                  try{
+                   await Provider.of <Orders>(context,listen: false).deleteProduct(widget.order.id);
+                  } catch(error){
+                    scaffold .showSnackBar(
+                      SnackBar(content: Text('Deleting failed', textAlign:TextAlign.center,
+                      ),
+                      ),
+                    ) ;
+                  }
+
                 },
                 color: Theme.of(context).errorColor,
 

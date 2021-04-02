@@ -32,6 +32,7 @@ class UserProductItem extends StatelessWidget {
                 icon: Icon(Icons.delete),
                 onPressed: () async{
                   try{
+
                  await   Provider.of <Products>(context,listen: false).deleteProduct(id);
 
                   } catch(error){

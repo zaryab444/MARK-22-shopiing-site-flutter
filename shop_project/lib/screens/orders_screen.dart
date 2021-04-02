@@ -5,8 +5,23 @@ import 'package:provider/provider.dart';
 import '../widgets/order_item.dart';
 
 
-class OrderScreen  extends StatelessWidget {
+class OrderScreen  extends StatefulWidget {
   static const routeName = '/orders';
+
+  @override
+  _OrderScreenState createState() => _OrderScreenState();
+}
+
+class _OrderScreenState extends State<OrderScreen> {
+  var _isLoading = false;
+  @override
+  //you also use didchange dependencies like we use in product fetch we are us boht init and didchange
+  void initState() {
+    Future.delayed(Duration.zero).then((_) {
+      Provider.of<Orders>(context, listen: false).fetchAndSetOrders();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final orderData = Provider.of<Orders>(context);
@@ -15,9 +30,11 @@ class OrderScreen  extends StatelessWidget {
      title: Text('Your orders'),
    ),
       drawer: AppDrawer(),
-      body: ListView.builder(
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
         itemCount: orderData.orders.length,
-        itemBuilder:(ctx,i)=> OrderItem(orderData.orders[i]) ,
+        itemBuilder: (ctx, i) => OrderItem(orderData.orders[i]),
       ),
     );
   }
