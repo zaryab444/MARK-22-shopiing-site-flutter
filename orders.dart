@@ -1,9 +1,8 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:shop_project/models/http_exception.dart';
 import './cart.dart';
 
 class OrderItem {
@@ -12,6 +11,7 @@ class OrderItem {
   final List<CartItem> products;
   final DateTime dateTime;
 
+
   OrderItem({
     @required this.id,
     @required this.amount,
@@ -19,16 +19,14 @@ class OrderItem {
     @required this.dateTime,
   });
 }
-
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
-
   List<OrderItem> get orders {
     return [..._orders];
   }
 
   Future<void> fetchAndSetOrders() async {
-    var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/orders.json');
+    var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json');
     final response = await http.get(url);
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -44,12 +42,12 @@ class Orders with ChangeNotifier {
           products: (orderData['products'] as List<dynamic>)
               .map(
                 (item) => CartItem(
-                      id: item['id'],
-                      price: item['price'],
-                      quantity: item['quantity'],
-                      title: item['title'],
-                    ),
-              )
+              id: item['id'],
+              price: item['price'],
+              quantity: item['quantity'],
+              title: item['title'],
+            ),
+          )
               .toList(),
         ),
       );
@@ -58,9 +56,9 @@ class Orders with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addOrder(List<CartItem> cartProducts, double total) async {
-    var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/orders.json');
 
+  Future<void> addOrder(List<CartItem> cartProducts, double total) async {
+    final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/orders.json');
     final timestamp = DateTime.now();
     final response = await http.post(
       url,
@@ -69,11 +67,11 @@ class Orders with ChangeNotifier {
         'dateTime': timestamp.toIso8601String(),
         'products': cartProducts
             .map((cp) => {
-                  'id': cp.id,
-                  'title': cp.title,
-                  'quantity': cp.quantity,
-                  'price': cp.price,
-                })
+          'id': cp.id,
+          'title': cp.title,
+          'quantity': cp.quantity,
+          'price': cp.price,
+        })
             .toList(),
       }),
     );
@@ -88,7 +86,29 @@ class Orders with ChangeNotifier {
     );
     notifyListeners();
   }
+  // void addOrder (List<CartItem> cartProducts, double total){
+  //   _orders.insert(
+  //     0,
+  //     OrderItem(
+  //       id: DateTime.now().toString(),
+  //       amount: total,
+  //       dateTime: DateTime.now(),
+  //       products:  cartProducts,
+  //     ),
+  //
+  //   );
+  //   notifyListeners();
+  // }
 
+
+
+
+
+
+  void removeItem(String id){
+    _orders.remove(id);
+    notifyListeners();
+  }
   Future <void> deleteProduct(String id) async{
 
     final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/orders/$id.json');
@@ -106,5 +126,7 @@ class Orders with ChangeNotifier {
     // _orders.removeWhere((ord) => ord.id == id);
     // notifyListeners();
   }
+
+
 
 }
