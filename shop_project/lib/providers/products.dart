@@ -77,6 +77,7 @@ class Products  with ChangeNotifier  {
           price: prodData['price'],
           isFavorite: prodData['isFavorite'],
           imageUrl: prodData['imageUrl'],
+
         ));
       });
       _items = loadedProducts;
@@ -85,36 +86,11 @@ class Products  with ChangeNotifier  {
       throw (error);
     }
   }
-  // Future<void> fetchAndSetProducts() async {
-  //   final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json?auth=$authToken'); //on other api you might not used ?auth=$authToken you might some header
-  //   try {              //like this http.get(url, headers: ); but the firebase use this ?auth=...
-  //     final response = await http.get(url);
-  //     final extractedData = json.decode(response.body) as Map<String, dynamic>;
-  //     if (extractedData  == null){
-  //       return;
-  //     }
-  //     final List<Product> loadedProducts = [];
-  //     extractedData.forEach((prodId, prodData) {
-  //       loadedProducts.add(Product(
-  //         id: prodId,
-  //         title: prodData['title'],
-  //         description: prodData['description'],
-  //         price: prodData['price'],
-  //         isFavorite: prodData['isFavorite'],
-  //         imageUrl: prodData['imageUrl'],
-  //       ));
-  //     });
-  //     _items = loadedProducts;
-  //     notifyListeners();
-  //   } catch (error) {
-  //     throw (error);
-  //   }
-  // }
 
 
   Future <void> addProduct(Product product) async{
     // var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json');
-    var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json');
+    final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json',{'auth':authToken});
   try {
     final response = await http.post(url, body: json.encode({
       'title': product.title,
@@ -131,7 +107,7 @@ class Products  with ChangeNotifier  {
       description: product.description,
       price: product.price,
       imageUrl: product.imageUrl,
-      // id: DateTime.now().toString(),
+
       id: json.decode(response.body)['name'],
     );
     _items.add(newProduct);
@@ -152,7 +128,7 @@ Future<void>  updateProduct(String id, Product newProduct) async {
 
     final prodIndex = _items.indexWhere((prod) => prod.id == id);
     if (prodIndex >=0) {
-      final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products/$id.json');
+      final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products/$id.json',{'auth':authToken});
      http.patch(url,body: json.encode({
        'title': newProduct.title,
        'description': newProduct.description,
@@ -170,7 +146,7 @@ Future<void>  updateProduct(String id, Product newProduct) async {
 
 
   Future<void> deleteProduct(String id) async {
-    final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products/$id.json');
+    final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products/$id.json',{'auth':authToken});
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
     var existingProduct = _items[existingProductIndex];
     _items.removeAt(existingProductIndex);
