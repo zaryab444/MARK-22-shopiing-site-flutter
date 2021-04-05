@@ -44,7 +44,9 @@ class Products  with ChangeNotifier  {
     // ),
   ];
 
+  final String authToken;
 
+  Products(this.authToken, this._items);
 
 
   List<Product> get items {
@@ -59,11 +61,11 @@ class Products  with ChangeNotifier  {
      return _items.firstWhere((prod) => prod.id == id);
  }
   Future<void> fetchAndSetProducts() async {
-    var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json');
+    final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json',{'auth':authToken});
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
-      if (extractedData  == null){
+      if (extractedData == null) {
         return;
       }
       final List<Product> loadedProducts = [];
@@ -83,6 +85,31 @@ class Products  with ChangeNotifier  {
       throw (error);
     }
   }
+  // Future<void> fetchAndSetProducts() async {
+  //   final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json?auth=$authToken'); //on other api you might not used ?auth=$authToken you might some header
+  //   try {              //like this http.get(url, headers: ); but the firebase use this ?auth=...
+  //     final response = await http.get(url);
+  //     final extractedData = json.decode(response.body) as Map<String, dynamic>;
+  //     if (extractedData  == null){
+  //       return;
+  //     }
+  //     final List<Product> loadedProducts = [];
+  //     extractedData.forEach((prodId, prodData) {
+  //       loadedProducts.add(Product(
+  //         id: prodId,
+  //         title: prodData['title'],
+  //         description: prodData['description'],
+  //         price: prodData['price'],
+  //         isFavorite: prodData['isFavorite'],
+  //         imageUrl: prodData['imageUrl'],
+  //       ));
+  //     });
+  //     _items = loadedProducts;
+  //     notifyListeners();
+  //   } catch (error) {
+  //     throw (error);
+  //   }
+  // }
 
 
   Future <void> addProduct(Product product) async{
