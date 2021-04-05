@@ -45,8 +45,9 @@ class Products  with ChangeNotifier  {
   ];
 
   final String authToken;
+  final String userId; //for fav product
 
-  Products(this.authToken, this._items);
+  Products(this.authToken, this.userId, this._items);
 
 
   List<Product> get items {
@@ -61,13 +62,16 @@ class Products  with ChangeNotifier  {
      return _items.firstWhere((prod) => prod.id == id);
  }
   Future<void> fetchAndSetProducts() async {
-    final url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json',{'auth':authToken});
+    var url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/products.json',{'auth':authToken});
     try {
       final response = await http.get(url);
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       if (extractedData == null) {
         return;
       }
+       url = Uri.https('flutter-update-6f52d-default-rtdb.firebaseio.com', '/userFavorites/$userId.json',{'auth':authToken});
+      final favoriteResponse = await http.get(url);
+      final favoriteData = json.decode(favoriteResponse.body);
       final List<Product> loadedProducts = [];
       extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
@@ -75,7 +79,7 @@ class Products  with ChangeNotifier  {
           title: prodData['title'],
           description: prodData['description'],
           price: prodData['price'],
-          isFavorite: prodData['isFavorite'],
+          isFavorite: favoriteData == null ? false : favoriteData[prodId] ?? false,
           imageUrl: prodData['imageUrl'],
 
         ));
@@ -97,7 +101,7 @@ class Products  with ChangeNotifier  {
       'description': product.description,
       'imageUrl': product.imageUrl,
       'price': product.price,
-      'isFavorite': product.isFavorite,
+
     }),
 
     );

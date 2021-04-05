@@ -21,6 +21,12 @@ class Auth with ChangeNotifier{
     return null;
   }
 
+  //this method is checked if user is authenticated for select fav products
+
+  String get userId{
+    return _userId;
+  }
+
 
 
  Future <void> __authenticate(String email , String password, String urlSegment) async {
